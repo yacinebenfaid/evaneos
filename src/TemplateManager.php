@@ -45,48 +45,48 @@ class TemplateManager
         $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
         $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
 
-        if ($this->hasQuoteInText(Quote::SUMMARY_HTML, $text)) {
-            $text = $this->replaceQuoteInText(
+        if ($this->hasPlaceHolder(PlaceHolders::QUOTE_SUMMARY_HTML, $text)) {
+            $text = $this->replacePlaceHolder(
                 $text,
-                Quote::SUMMARY_HTML,
+                PlaceHolders::QUOTE_SUMMARY_HTML,
                 Quote::renderHtml($quote)
             );
         }
 
-        if ($this->hasQuoteInText(Quote::SUMMARY, $text)) {
-            $this->replaceQuoteInText(
+        if ($this->hasPlaceHolder(PlaceHolders::QUOTE_SUMMARY, $text)) {
+            $this->replacePlaceHolder(
                 $text,
-                Quote::SUMMARY,
+                PlaceHolders::QUOTE_SUMMARY,
                 Quote::renderText($quote));
         }
 
-        if ($this->hasQuoteInText(Quote::DESTINATION_NAME, $text)) {
-            $this->replaceQuoteInText($text, Quote::DESTINATION_NAME, $destinationOfQuote->countryName);
+        if ($this->hasPlaceHolder(PlaceHolders::QUOTE_DESTINATION_NAME, $text)) {
+            $this->replacePlaceHolder($text, PlaceHolders::QUOTE_DESTINATION_NAME, $destinationOfQuote->countryName);
         }
 
-        if ($this->hasQuoteInText(Quote::DESTINATION_LINK, $text) ) {
+        if ($this->hasPlaceHolder(PlaceHolders::QUOTE_DESTINATION_LINK, $text) ) {
             $destination = DestinationRepository::getInstance()->getById($quote->destinationId);
             if ($destination) {
-                $text = $this->replaceQuoteInText(
+                $text = $this->replacePlaceHolder(
                     $text,
-                    Quote::DESTINATION_LINK,
+                    PlaceHolders::QUOTE_DESTINATION_LINK,
                     $usefulObject->url . '/' . $destination->countryName . '/quote/' . $quote->id
                     );
             } else {
-                $text = $this->replaceQuoteInText($text, Quote::DESTINATION_LINK, '');
+                $text = $this->replacePlaceHolder($text, PlaceHolders::QUOTE_DESTINATION_LINK, '');
             }
         }
 
         return $text;
     }
 
-    private function hasQuoteInText(string $quote, string $text)
+    private function hasPlaceHolder(string $placeHolder, string $text)
     {
-        return strpos($text, $quote) !== false;
+        return strpos($text, $placeHolder) !== false;
     }
 
-    private function replaceQuoteInText(string $text, string $quoteToReplace, string $replacedBy)
+    private function replacePlaceHolder(string $text, string $placeHolderToReplace, string $replacedBy)
     {
-        return str_replace($quoteToReplace, $replacedBy, $text);
+        return str_replace($placeHolderToReplace, $replacedBy, $text);
     }
 }
