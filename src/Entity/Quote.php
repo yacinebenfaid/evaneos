@@ -2,6 +2,10 @@
 
 class Quote
 {
+    const SUMMARY = '[quote:summary]';
+    const SUMMARY_HTML = '[quote:summary_html]';
+    const DESTINATION_NAME = '[quote:destination_name]';
+    const DESTINATION_LINK = '[quote:destination_link]';
     public $id;
     public $siteId;
     public $destinationId;
@@ -15,6 +19,7 @@ class Quote
         $this->dateQuoted = $dateQuoted;
     }
 
+    // todo:  Create decorators ex: HtmlQuote::render, PlainTextQuote::render
     public static function renderHtml(Quote $quote)
     {
         return '<p>' . $quote->id . '</p>';
