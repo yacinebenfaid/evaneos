@@ -42,7 +42,6 @@ class TemplateManager
 
     private function renderQuote(Quote $quote, string $text): string
     {
-        $_quoteFromRepository = QuoteRepository::getInstance()->getById($quote->id);
         $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
         $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
 
@@ -50,7 +49,7 @@ class TemplateManager
             $text = $this->replaceQuoteInText(
                 $text,
                 Quote::SUMMARY_HTML,
-                Quote::renderHtml($_quoteFromRepository)
+                Quote::renderHtml($quote)
             );
         }
 
@@ -58,7 +57,7 @@ class TemplateManager
             $this->replaceQuoteInText(
                 $text,
                 Quote::SUMMARY,
-                Quote::renderText($_quoteFromRepository));
+                Quote::renderText($quote));
         }
 
         if ($this->hasQuoteInText(Quote::DESTINATION_NAME, $text)) {
@@ -71,7 +70,7 @@ class TemplateManager
                 $text = $this->replaceQuoteInText(
                     $text,
                     Quote::DESTINATION_LINK,
-                    $usefulObject->url . '/' . $destination->countryName . '/quote/' . $_quoteFromRepository->id
+                    $usefulObject->url . '/' . $destination->countryName . '/quote/' . $quote->id
                     );
             } else {
                 $text = $this->replaceQuoteInText($text, Quote::DESTINATION_LINK, '');
