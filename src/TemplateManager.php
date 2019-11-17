@@ -28,13 +28,15 @@ class TemplateManager
             $text = $this->renderQuote($quote, $text);
         }
 
-        /*
-         * USER
-         * [user:*]
-         */
-        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $this->applicationContext->getCurrentUser();
-        if($_user) {
-            (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]', ucfirst(mb_strtolower($_user->firstname)), $text);
+
+        $user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $this->applicationContext->getCurrentUser();
+
+        if($this->hasPlaceHolder(PlaceHolders::USER_FIRST_NAME, $text)) {
+            $text = $this->replacePlaceHolder(
+                $text,
+                PlaceHolders::USER_FIRST_NAME,
+                $user->getFirstName()
+            );
         }
 
         return $text;
