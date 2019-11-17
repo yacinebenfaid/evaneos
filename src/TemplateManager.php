@@ -2,8 +2,13 @@
 
 class TemplateManager
 {
+    /** @var ApplicationContext */
+    private $applicationContext;
+
     public function getTemplateComputed(Template $tpl, array $data)
     {
+        $this->applicationContext = ApplicationContext::getInstance();
+
         if (!$tpl) {
             throw new \RuntimeException('no tpl given');
         }
@@ -17,8 +22,6 @@ class TemplateManager
 
     private function computeText($text, array $data)
     {
-        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
-
         $quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
 
         if ($quote) {
@@ -29,7 +32,7 @@ class TemplateManager
          * USER
          * [user:*]
          */
-        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
+        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $this->applicationContext->getCurrentUser();
         if($_user) {
             (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]', ucfirst(mb_strtolower($_user->firstname)), $text);
         }
